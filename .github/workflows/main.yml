@@ -21,7 +21,7 @@ jobs:
       - name: test with maven
         run: mvn -B test --file pom.xml
   reversion:
-    runs-on: unbuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v3
