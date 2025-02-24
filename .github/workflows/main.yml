@@ -34,7 +34,7 @@ jobs:
 
       - name: Increment version
         id: increment-version
-        uses: mickem/gh-action-bump-maven-version@latest
+        uses: mickem/gh-action-bump-maven-version@v1.0.0
         with:
           bump-command: mvn org.codehaus.mojo:versions-maven-plugin:2.7:set-property -Dproperty=revision -DnewVersion=@NEW_VERSION@
 
