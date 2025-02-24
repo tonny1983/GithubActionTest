@@ -26,11 +26,12 @@ jobs:
       - if: github.event.release
         name: Update version in pom.xml (Release only)
         run: mvn -B versions:set -DnewVersion=${{ github.event.release.tag_name }} -DgenerateBackupPoms=false
-      - name: Commit and Push Changes
+      - if: github.event.release
+        name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git commit -am "chore: update pom version to ${{ github.event.inputs.new_version }}"
+          git commit -am "chore: update pom version to ${{ github.event.release.tag_name }}"
           git push origin HEAD:main
         
   
