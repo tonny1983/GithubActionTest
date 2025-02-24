@@ -20,24 +20,15 @@ jobs:
 
       - name: test with maven
         run: mvn -B test --file pom.xml
-  reversion:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'adopt'
-          java-version: 17
-
-      - name: Increment version
-        id: increment-version
-        uses: mickem/gh-action-bump-maven-version@v1.0.0
-        with:
-          bump-command: mvn org.codehaus.mojo:versions-maven-plugin:2.7:set-property -Dproperty=revision -DnewVersion=@NEW_VERSION@
-
-
+      - if: github.event.release
+        name: Update version in pom.xml (Release only)
+        run: mvn -B versions:set -DnewVersion=${{ github.event.release.tag_name }} -DgenerateBackupPoms=false
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git commit -am "chore: update pom version to ${{ github.event.inputs.new_version }}"
+          git push origin HEAD:main
         
   
