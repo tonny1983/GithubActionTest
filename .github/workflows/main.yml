@@ -34,8 +34,10 @@ jobs:
 
       - name: Increment version
         id: increment-version
-        uses: nnichols/maven-version-bump-action@v3
+        uses: mickem/gh-action-bump-maven-version@latest
         with:
-          github-token: ${{ secrets.github_token }}
+          bump-command: mvn org.codehaus.mojo:versions-maven-plugin:2.7:set-property -Dproperty=revision -DnewVersion=@NEW_VERSION@
+
+
         
   
