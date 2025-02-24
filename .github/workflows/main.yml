@@ -7,8 +7,6 @@ on:
 
 jobs:
   tests:
-    permissions:
-      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -22,7 +20,12 @@ jobs:
 
       - name: test with maven
         run: mvn -B test --file pom.xml
-
+  revision:
+    runs-on: ubuntu-latest
+    needs: tests
+    permissions:
+      contents: write
+    steps:
       - if: github.event.release
         name: Update version in pom.xml (Release only)
         run: mvn -B versions:set -DnewVersion=${{ github.event.release.tag_name }} -DgenerateBackupPoms=false
@@ -33,5 +36,11 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git commit -am "chore: update pom version to ${{ github.event.release.tag_name }}"
           git push origin HEAD:main
-        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: revision
+    steps:
+      - name: deploy
+        run: echo "Dummy Deploy"
+    
   
